@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <form id="form1" runat="server">
+        <label id="limgInp" for="fname">Tire uma Foto:</label><br>
+        <input id="imgInp" type="file" accept="image/*" capture="camera">
+       
+        <img style="display: none;" id="preview" src="#" alt="your image" width="50%"/>
+        
+        <button style="display: none;" type="button" id="send" >Click Me!</button>
+    </form>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+
+        var iwidth = 0;
+        var iheight = 0;
+        var image = new Image();;
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    //image = new Image();
+                    image.src = e.target.result;
+
+                    image.onload = function() {
+                        // access image size here 
+                        //console.log(this.width);
+
+                        iwidth =this.width;
+                        iheight =this.height;
+
+                        //$('#imgresizepreview, #profilepicturepreview').attr('src', this.src);
+                        $('#preview').attr('src', this.src);
+
+                        //$('#preview').show();
+                        $('#send').show();
+
+                        $('#imgInp').hide();
+                        $('#limgInp').hide();
+
+                    };
+                    
+                    
+
+                    //$('#preview').attr('src', e.target.result);
+                    //$('#preview').show();
+                    //$('#send').show();
+
+                    
+                    
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#send").click(function(){
+            //alert("sdfsdfs");
+            //alert($('#preview').attr('src'));
+
+            const { jsPDF } = window.jspdf;
+
+            // Default export is a4 paper, portrait, using millimeters for units
+            //const doc = new jsPDF();
+            const doc = new jsPDF('l', 'mm','a4');
+
+            console.log(iwidth);
+            console.log(iheight);
+             
+            //heightmm = 75
+            //widthmm = iwidth / (iheight/heightmm)
+
+            widthmm = 100
+            heightmm = iheight / (iwidth/widthmm)
+
+            console.log(widthmm);
+            console.log(heightmm);
+
+            doc.addImage(image.src, 'JPEG', 172, 10, widthmm, heightmm);
+
+            //doc.text("Hello world!", 10, 10);
+            doc.save("a4.pdf");
+
+            $('#imgInp').show();
+            $('#limgInp').show();
+            /*
+            $.ajax({
+            type: "POST",
+            url: 'preview.php',
+            dataType: 'json',
+            data: {image: $('#preview').attr('src')},
+
+            success: function (obj, textstatus) {
+                        if( !('error' in obj) ) {
+                            yourVariable = obj.result;
+                        }
+                        else {
+                            console.log(obj.error);
+                        }
+                    }
+
+            
+            });
+
+        */
+        });
+
+        $("#imgInp").change(function(){
+            readURL(this);
+        });
+    </script>
+  </body>
+</html>
