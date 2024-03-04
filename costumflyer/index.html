@@ -92,13 +92,13 @@
             //heightmm = 75
             //widthmm = iwidth / (iheight/heightmm)
 
-            widthmm = 155
+            widthmm = 115
             heightmm = iheight / (iwidth/widthmm)
 
             console.log(widthmm);
             console.log(heightmm);
 
-            doc.addImage(image.src, 'JPEG', 107, 30, widthmm, heightmm);
+            doc.addImage(image.src, 'JPEG', 167, 10, widthmm, heightmm);
 
             //doc.text("Hello world!", 10, 10);
             doc.save("a4.pdf");
